@@ -1,10 +1,12 @@
 
 .outer-wrapper-horizontal{
-   margin: 1rem auto;
+   margin:  auto;
+  
     height: 8rem;
     width: 100vw; 
     font-size: 16px;
     position: relative;
+  
     .inner-wrapper{
         display: flex;
         flex-direction: column;
@@ -38,7 +40,7 @@
         width: 100%;
         top: 35%;
         left:0;
-        transition: all 0.5s ease-in;
+        transition: all 1.5s ease-in;
     }
     .stepper-line{
  
@@ -53,7 +55,11 @@
     }
   
 }
-
+.Checkout{
+    &::before{
+        min-height: 0;
+    }
+}
 @media only screen and (max-width: 480px){
     .outer-wrapper-horizontal{
         display: none;

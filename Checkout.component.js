@@ -1,46 +1,77 @@
 import  {Checkout as SourceCheckout} from "SourceRoute/Checkout/Checkout.component.js"
-import {connect} from "react-redux"
+
+import ContentWrapper from 'Component/ContentWrapper';
 import "./Checkout.extension.style.scss"
 class Checkout extends SourceCheckout {
    constructor(props){
        super(props)
+       this.state = {
+           progress : 0,
+           length: Object.entries(this.stepMap).length
+       }
        console.log("props",props)
-   }
+   } 
+    parent = ()=>{
+        return (
+            <main block="Checkout">
+                {this.progress()}
+                <ContentWrapper
+                  wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
+                  label={ __('Checkout page') }
+                  >
+                    { this.renderSummary(true) }
+                    <div block="Checkout" elem="Step">
+                        { this.renderTitle() }
+                        { this.renderGuestForm() }
+                        { this.renderStep() }
+                        { this.renderLoader() }
+                    </div>
+                    <div>
+                        { this.renderSummary() }
+                        { this.renderPromo() }
+                        { this.renderCoupon() }
+                    </div>
+                </ContentWrapper>
+            </main>
+        );
+    }
+   progress = ()=>{
+    return(
+        <div className="outer-wrapper-horizontal" >
+        {Object.entries(this.stepMap).map((item , i )=> {
 
-    
-
-    render(){
-        console.log(this.props)
+           if(i+1 !==this.state.length) return(
+            <div className="inner-wrapper" key={i} style={{left:`${(i+1 )* 25}%`}}>   
+        <div className="stepper-number">{this.state.progress >(i+1) ? <>&#10004;</> : i+1 }</div>
+        <div className="stepper-desc">{item[1].title.value}</div>
+        </div >
+        )})}
         
+        <div className="stepper-line"></div>
+        <div className="stepper-line-active" style={{width:`${this.state.progress * 100/this.state.length+1}%`}}></div>
+        </div>
+    )
+   }
+  
+    
+     
+    
+    componentDidUpdate(prevProps) {
+      // Typical usage (don't forget to compare props):
+      if (this.props.checkoutStep !== prevProps.checkoutStep) {
+        this.setState({...this.state,progress: this.state.progress + 1})
+      }
+    }
+    render(){
+ 
         return(
-            <div className="outer-wrapper-horizontal" >
-            
-            <div className="inner-wrapper" style={{left:"25%"}}>   
-            <div className="stepper-number" style={{backgroundColor:"red !important"}} >1</div>
-            <div className="stepper-desc">Shipping</div>
-            
-            
-            </div >
-            <div className="inner-wrapper" style={{left:"50%" }}>   
-            <div className="stepper-number" >2</div>
-            <div className="stepper-desc">Review & payment</div>
-           
-          
-            </div>
-            
-            <div className="stepper-line"></div>
-            <div className="stepper-line-active" style={{width:`25%`}}></div>
-            </div>
+            <>   
+            {this.parent()}
+            </>
         )
+        
     }
 
 } 
-export const mapStateToProps = (state)=>({
-    totals: state.CartReducer.cartTotals,
-    customer: state.MyAccountReducer.customer,
-    guest_checkout: state.ConfigReducer.guest_checkout,
-    countries: state.ConfigReducer.countries,
-    isEmailAvailable: state.CheckoutReducer.isEmailAvailable,
-   
-})
-export default connect(mapStateToProps)(Checkout)
+
+export default Checkout
