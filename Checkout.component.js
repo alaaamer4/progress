@@ -42,7 +42,7 @@ class Checkout extends SourceCheckout {
 
            if(i+1 !==this.state.length) return(
             <div className="inner-wrapper" key={i} style={{left:`${(i+1 )* (100/ this.state.length +1)}%`}}>   
-        <div className="stepper-number">{this.state.progress >(i+1) ? <>&#10004;</> : i+1 }</div>
+       {this.state.progress >(i) ? <div className="stepper-checked">&#10004;</div> : <div className="stepper-number">  {i+1 }</div>}
         <div className="stepper-desc">{item[1].title.value}</div>
         </div >
         )})}
